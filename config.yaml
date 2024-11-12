@@ -1,0 +1,50 @@
+# config.yaml
+
+camera_calibration:
+  # nx 和 ny 分别表示棋盘格的内部角点数（列和行）
+  # 用于相机校准中识别棋盘格上的点
+  nx: 9   # 棋盘格列的内部角点数
+  ny: 6   # 棋盘格行的内部角点数
+
+  # calibration_pattern 表示棋盘格校准图像的路径
+  # 在相机校准步骤中将会使用这些图像来计算校准系数
+  calibration_pattern: 'camera_cal/calibration*.jpg'   # 校准图像文件路径的通配符模式
+
+perspective_transform:
+  # src_points 表示透视变换的源点坐标
+  # 这些点应放置在实际车道线附近，以便从原始视角转为俯视图
+  src_points:
+    - [580, 440]   # 左上角点坐标
+    - [700, 440]   # 右上角点坐标
+    - [1100, 720]  # 右下角点坐标
+    - [200, 720]   # 左下角点坐标
+
+  # dst_points 表示透视变换的目标点坐标
+  # 定义俯视图车道线的目标位置，以便将车道线拉平并对齐
+  dst_points:
+    - [300, 0]     # 左上角目标点坐标
+    - [950, 0]     # 右上角目标点坐标
+    - [950, 720]   # 右下角目标点坐标
+    - [300, 720]   # 左下角目标点坐标
+
+binary_thresholds:
+  # sobel_thresh 是 Sobel 阈值参数，用于图像边缘检测
+  # 其中 orient 表示计算方向，thresh_min 和 thresh_max 定义梯度强度的阈值范围
+  sobel_thresh:
+    orient: 'x'       # 边缘检测方向（'x' 表示水平，'y' 表示垂直）
+    thresh_min: 30    # Sobel 阈值的最小值，低于此值的边缘将被忽略
+    thresh_max: 150   # Sobel 阈值的最大值，高于此值的边缘将被保留
+
+lane_detection:
+  # nwindows 表示滑窗数量，用于检测车道线位置
+  # margin 表示滑窗的宽度，用于限定滑窗搜索的范围
+  # minpix 表示滑窗中检测到的最低像素点数，低于该数值滑窗将重新定位
+  nwindows: 9    # 滑窗的数量，用于确定车道线位置
+  margin: 80     # 滑窗宽度的一半（以像素为单位）
+  minpix: 40     # 滑窗中最小像素数，少于该值时重新定位滑窗
+
+output:
+  # input_video 是输入视频文件的路径
+  # output_video 是处理后保存的视频文件路径
+  input_video: "test_images/input_video.mp4"   # 待处理视频文件路径
+  output_video: "output_images/result_video.mp4"  # 结果视频保存路径
